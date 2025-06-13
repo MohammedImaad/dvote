@@ -1,12 +1,14 @@
-const hre = require("hardhat");
-
 async function main() {
-  const Voting = await hre.ethers.getContractFactory("Voting");
+  const [deployer] = await ethers.getSigners();
+
+  console.log("Deploying contract with account:", deployer.address);
+
+  const Voting = await ethers.getContractFactory("Voting");
   const voting = await Voting.deploy();
 
-  await voting.deployed();
+  await voting.waitForDeployment(); // ✅ This works with newer versions
 
-  console.log(`Voting contract deployed to: ${voting.address}`);
+  console.log("Voting contract deployed to:", await voting.getAddress());
 }
 
 main().catch((error) => {
