@@ -9,7 +9,7 @@ function App() {
     const loadProposals = async () => {
       if (!contract) return;
 
-      const allProposals = await contract.getProposals(); // assumes such a function exists
+      const allProposals = await contract.getProposal(); // assumes such a function exists
       setProposals(allProposals);
     };
 
