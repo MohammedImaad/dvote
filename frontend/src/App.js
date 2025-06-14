@@ -1,23 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import { useVotingContract } from "./hooks/useVoting";
 
 function App() {
+  const { contract, account } = useVotingContract();
+  const [proposals, setProposals] = useState([]);
+
+  useEffect(() => {
+    const loadProposals = async () => {
+      if (!contract) return;
+
+      const allProposals = await contract.getProposals(); // assumes such a function exists
+      setProposals(allProposals);
+    };
+
+    loadProposals();
+  }, [contract]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Transparent Voting DApp</h1>
+      <p>Connected as: {account}</p>
+
+      <ul>
+        {proposals.map((p, i) => (
+          <li key={i}>{p.name} — Votes: {p.voteCount.toString()}</li>
+        ))}
+      </ul>
     </div>
   );
 }
